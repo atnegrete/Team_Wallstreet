@@ -21,9 +21,7 @@ public class RequestManager {
 
     private OkHttpClient client;
     private Request request;
-    private RequestListener listener;
     CookieManager cookieManager;
-    public static String RESULT_KEY = "results_key";
 
     public RequestManager(){
         cookieManager = new CookieManager();
@@ -34,7 +32,6 @@ public class RequestManager {
     }
 
     public void makeRequest(final Context context, String url, final RequestListener listener, String cookie){
-        this.listener = listener;
         if(cookie == null)
             request = new Request.Builder().url(url).build();
         else
@@ -55,21 +52,6 @@ public class RequestManager {
 
                 listener.onRequestComplete(myResponse);
 
-
-
-//                Intent intent = new Intent("SEARCH_FILTER");
-//                intent.putExtra(RESULT_KEY, "myfile.txt");
-//                context.sendBroadcast(intent);
-//
-//                try {
-//                    OutputStreamWriter outputStream = new OutputStreamWriter(context.openFileOutput("myfile.txt", Context.MODE_PRIVATE));
-//                    outputStream.write(myResponse);
-//                    outputStream.close();
-//                } catch (Exception e) {
-//                    Log.e("Exception", "File write failed: " + e.toString());
-//                }
-//
-//                Log.e("RESPONSE", ""+ myResponse.getBytes("UTF-8").length);
             }
         });
     }

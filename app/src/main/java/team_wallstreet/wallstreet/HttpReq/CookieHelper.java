@@ -22,7 +22,6 @@ import team_wallstreet.wallstreet.R;
 
 public class CookieHelper {
 
-    public static final String cookie_fname = "cookie.txt";
     private String cookie;
     private String crumb;
 
@@ -35,14 +34,16 @@ public class CookieHelper {
 
                 int index = response.lastIndexOf("CrumbStore");
                 if (index != -1) {
-                    Log.e("CRUMB", "found crumb: " + response.substring(index+22, index+35));
+                    Log.e("CRUMB", "found crumb: " + response.substring(index+22, index+33));
                     Log.e("COOKIE", "found cookie: " + requestManager.cookieManager.getCookieStore().getCookies().get(0).toString());
 
 
                     // Save cookie & crumb to var
                     crumb = response.substring(index+22, index+33);
                     cookie = requestManager.cookieManager.getCookieStore().getCookies().get(0).toString();
-//                    StringEscapeUtils.unescapeJava(response.substring(index+22, index+33));
+
+                    // Sometimes the crumb contains escape chars, will need to figure out how to check for those and to escape them.
+                    //StringEscapeUtils.unescapeJava(response.substring(index+22, index+33));
                 }
             }
         },null);
