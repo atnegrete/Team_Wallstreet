@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Wallstreet</string>
+    <string name="search_code">Search</string>
 </resources>
