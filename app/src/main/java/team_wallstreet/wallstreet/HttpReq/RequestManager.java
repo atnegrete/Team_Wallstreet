@@ -21,7 +21,7 @@ public class RequestManager {
 
     private OkHttpClient client;
     private Request request;
-    CookieManager cookieManager;
+    public CookieManager cookieManager;
 
     public RequestManager(){
         cookieManager = new CookieManager();
