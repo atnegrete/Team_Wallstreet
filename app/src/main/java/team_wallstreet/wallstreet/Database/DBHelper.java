@@ -9,7 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 
 /**
- * Created by TJ on 6/13/2017.
+ *  Created by TJ on 6/13/2017.
+ *  http://zpweb.site/2015/12/09/using-sqlite-database-to-store-data-within-android-app/
  */
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -31,7 +32,7 @@ public class DBHelper extends SQLiteOpenHelper {
      *                newer, {@link #onDowngrade} will be used to downgrade the database
      */
     public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+        super(context, DATABASE_NAME, null, 1);
         db = this.getWritableDatabase();
     }
 
