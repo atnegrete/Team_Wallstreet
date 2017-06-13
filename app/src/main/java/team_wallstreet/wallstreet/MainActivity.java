@@ -15,12 +15,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidplot.xy.XYPlot;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
 
 import team_wallstreet.wallstreet.HttpReq.CookieHelper;
@@ -34,11 +37,16 @@ public class MainActivity extends AppCompatActivity {
     Button search_button;
     EditText et_search;
 
+    private XYPlot plot;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+
+        Intent graphIntent = new Intent(this, GraphActivity.class);
+        startActivity(graphIntent);
     }
 
     void init(){
@@ -87,5 +95,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void createGraph(ArrayList<Date> dates, double[] prices) {
+        plot = (XYPlot) findViewById(R.id.plot);
+
+
     }
 }

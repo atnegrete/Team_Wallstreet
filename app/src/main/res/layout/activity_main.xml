@@ -45,16 +45,27 @@
                     android:layout_weight="1"
                     android:text="Search Stock"/>
 
+                <com.androidplot.xy.XYPlot
+                    style="@style/APDefacto.Light"
+                    android:id="@+id/plot"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:title="Stock History"
+                    app:rangeTitle="Price"
+                    app:domainTitle="Date" />
+                <!-- app:linelables="left|bottom"
+                app:linelabelRotationBottom="-45" -->
+
                 <TextView
                     android:id="@+id/tv_search_result"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:visibility="visible" />
+                    android:visibility="invisible" />
+
             </LinearLayout>
+
         </ScrollView>
-
-
 
     </LinearLayout>
 

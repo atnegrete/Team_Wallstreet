@@ -30,9 +30,9 @@
             android:layout_height="match_parent"
             app:title="Stock History"
             app:rangeTitle="Price"
-            app:domainTitle="Date"
-            app:linelables="left|bottom"
-            app:linelabelRotationBottom="-45"/>
+            app:domainTitle="Date" />
+            <!-- app:linelables="left|bottom"
+            app:linelabelRotationBottom="-45" -->
 
     </LinearLayout>
 
