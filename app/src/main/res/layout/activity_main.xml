@@ -46,7 +46,7 @@
                     android:text="Search Stock"/>
 
                 <com.androidplot.xy.XYPlot
-                    style="@style/APDefacto.Light"
+                    style="@style/APDefacto.Dark"
                     android:id="@+id/plot"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

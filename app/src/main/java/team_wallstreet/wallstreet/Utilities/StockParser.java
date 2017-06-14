@@ -1,5 +1,7 @@
 package team_wallstreet.wallstreet.Utilities;
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,14 +14,14 @@ import java.util.Scanner;
 
 public class StockParser {
 
-    private static final int SIZE_OF_HISTORY = 365;
+    private static final int SIZE_OF_HISTORY = 10*365;
 
     String StockCode;
     ArrayList<Date> DateList;
     double[] OpenList, HighList, LowList, CloseList, CloseAdjList;
     int[] VolumeList;
 
-    public void StockParser() {
+    public StockParser() {
 
         DateList = new ArrayList();
         OpenList = new double[SIZE_OF_HISTORY];
@@ -38,20 +40,21 @@ public class StockParser {
      * @param stockCSV Csv file obtained from Yahoo Stocks.
      * @param code stock code.
      */
-    public void StockParser(String stockCSV, String code) {
+    public StockParser(String stockCSV, String code) {
 
-        StockParser();
+        new StockParser();
         StockCode = code;
 
         int count = 0;
         Scanner scanner = new Scanner(stockCSV);
-        Scanner tokenizer;
 
         // Moves scanner past csv headers
-        scanner.nextLine();
+        System.out.println(scanner.nextLine());
 
         while (scanner.hasNextLine()) {
-            parseStockString(scanner.nextLine(), count);
+            String input = scanner.nextLine();
+            Log.d("Data", "Input: " + input);
+            parseStockString(input, count);
             count++;
         }
 
@@ -61,11 +64,13 @@ public class StockParser {
     private void parseStockString(String data, int index) {
 
         Scanner scanner = new Scanner(data);
+        scanner.useDelimiter(",");
 
         // Change string to a Date and store in date.
         try {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-            DateList.add(df.parse(scanner.next()));
+            String date = scanner.next();
+            DateList.add(df.parse(date));
         } catch (ParseException e) {
             e.printStackTrace();
             DateList.add(null);
