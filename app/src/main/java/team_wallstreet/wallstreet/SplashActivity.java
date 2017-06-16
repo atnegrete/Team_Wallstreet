@@ -42,6 +42,11 @@ public class SplashActivity extends Activity {
 
         // attempt to get cookie from Yahoo
         mCookieHelper = new CookieHelper();
+
+        setCookieAndGetCrumb();
+    }
+
+    private void setCookieAndGetCrumb() {
         final RequestManager requestManager = new RequestManager();
         mCookieHelper.getCookie(getApplicationContext(), requestManager,  new RequestListener() {
 
@@ -60,13 +65,15 @@ public class SplashActivity extends Activity {
                     // Sometimes the crumb contains escape chars, will need to figure out how to check for those and to escape them.
                     //StringEscapeUtils.unescapeJava(response.substring(index+22, index+33));
 
-                    // Go to main activity when cookie has been loaded.
-                    goMain(SplashActivity.this);
+                    // Go to main activity when cookie has been loaded && crumb contains no escape characters
+                    if(! mCookieHelper.getCrumb().contains("\\u"))
+                        goMain(SplashActivity.this);
+                    else
+                        setCookieAndGetCrumb();
                 }
             }
 
         });
-
     }
 
     /** Go to the main activity. */
