@@ -50,8 +50,8 @@ public class SplashActivity extends Activity {
 
                 int index = response.lastIndexOf("CrumbStore");
                 if (index != -1) {
-                    Log.e("CRUMB", "found crumb: " + response.substring(index+22, index+33));
-                    Log.e("COOKIE", "found cookie: " + requestManager.cookieManager.getCookieStore().getCookies().get(0).toString());
+                    Log.d("CRUMB", "found crumb: " + response.substring(index+22, index+33));
+                    Log.d("COOKIE", "found cookie: " + requestManager.cookieManager.getCookieStore().getCookies().get(0).toString());
 
                     // Save cookie & crumb to var
                     mCookieHelper.setCrumb(response.substring(index+22, index+33)); // crumb
@@ -64,6 +64,7 @@ public class SplashActivity extends Activity {
                     goMain(SplashActivity.this);
                 }
             }
+
         });
 
     }

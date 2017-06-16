@@ -41,7 +41,7 @@ public class RequestManager {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                listener.onRequestComplete(e.getMessage());
+                listener.onRequestComplete(e.toString());
                 call.cancel();
             }
 
@@ -51,7 +51,6 @@ public class RequestManager {
                 final String myResponse = response.body().string();
 
                 listener.onRequestComplete(myResponse);
-
             }
         });
     }

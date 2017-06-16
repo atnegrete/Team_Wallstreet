@@ -18,11 +18,14 @@ import static team_wallstreet.wallstreet.SplashActivity.CRUMB_KEY;
 
 public class MainActivity extends AppCompatActivity {
 
-    RequestManager requestManager;
-    String cookie;
-    String crumb;
-    Button search_button;
-    EditText et_search;
+    private static final String LOG_TAG = MainActivity.class.getName();
+
+    private RequestManager mRequestManager;
+    private String mCookie;
+    private String mCrumb;
+    private Button mButtonSearch;
+    private EditText mEditTextSearch;
+    private TextView mTextViewResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Get cookie & Crumb from SplashActivity intent
-        cookie = getIntent().getStringExtra(COOKIE_KEY);
-        crumb = getIntent().getStringExtra(CRUMB_KEY);
+        mCookie = getIntent().getStringExtra(COOKIE_KEY);
+        mCrumb = getIntent().getStringExtra(CRUMB_KEY);
 
         init();
     }
@@ -42,20 +45,20 @@ public class MainActivity extends AppCompatActivity {
         final String timestamp = "" + new Date().getTime();
 
         //get code
-        et_search = (EditText) findViewById(R.id.et_search);
+        mEditTextSearch = (EditText) findViewById(R.id.et_search);
 
         // set up on click listener for search button
-        search_button = (Button) findViewById(R.id.b_search);
-        search_button.setOnClickListener(new View.OnClickListener() {
+        mButtonSearch = (Button) findViewById(R.id.b_search);
+        mButtonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(et_search.getText().toString().length() != 0) {
-                    if (cookie != null) {
-                        requestManager = new RequestManager();
-                        String url = "https://query1.finance.yahoo.com/v7/finance/download/" + et_search.getText().toString() +
-                                "?period1=1337478873&period2=" + timestamp + "&interval=1d&events=history&crumb=" + crumb;
-                        requestManager.makeRequest(getApplicationContext(), url, new RequestListener() {
+                if(mEditTextSearch.getText().toString().length() != 0) {
+                    if (mCookie != null) {
+                        mRequestManager = new RequestManager();
+                        String url = "https://query1.finance.yahoo.com/v7/finance/download/" + mEditTextSearch.getText().toString() +
+                                "?period1=1337478873&period2=" + timestamp + "&interval=1d&events=history&crumb=" + mCrumb;
+                        mRequestManager.makeRequest(getApplicationContext(), url, new RequestListener() {
 
                             @Override
                             public void onRequestComplete(final String response) {
@@ -65,13 +68,15 @@ public class MainActivity extends AppCompatActivity {
                                     public void run() {
 
                                         // response is the actual csv file as string, needs parsing
-                                        TextView tv = (TextView) findViewById(R.id.tv_search_result);
-                                        tv.setText(response);
+                                        mTextViewResult = (TextView) findViewById(R.id.tv_search_result);
+                                        mTextViewResult.setText(response);
 
                                     }
                                 });
                             }
-                        }, cookie);
+
+
+                        }, mCookie);
                     } else {
                         TextView tv = (TextView) findViewById(R.id.tv_search_result);
                         tv.setText("Invalid Cookie Loaded");
