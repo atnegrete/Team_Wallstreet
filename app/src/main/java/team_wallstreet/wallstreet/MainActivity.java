@@ -5,18 +5,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
+import java.util.List;
 
+import team_wallstreet.wallstreet.Fragments.StocksGraphFragment;
 import team_wallstreet.wallstreet.HttpReq.RequestListener;
 import team_wallstreet.wallstreet.HttpReq.RequestManager;
+import team_wallstreet.wallstreet.Utilities.StockParser;
 
 import static team_wallstreet.wallstreet.SplashActivity.COOKIE_KEY;
 import static team_wallstreet.wallstreet.SplashActivity.CRUMB_KEY;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements StocksGraphFragment.passStockDataCallBack {
 
     private static final String LOG_TAG = MainActivity.class.getName();
 
@@ -26,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mButtonSearch;
     private EditText mEditTextSearch;
     private TextView mTextViewResult;
+    private RelativeLayout mProgressBarLayout;
+    private StockParser sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +69,22 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onRequestComplete(final String response) {
 
+                                mProgressBarLayout.setVisibility(View.VISIBLE);
+
+                                // Parse the response
+                                sp = new StockParser(response, mEditTextSearch.getText().toString());
+
+                                // Show the Graph
+                                loadGraphFragment();
+
+                                // Hide progress bar
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-
-                                        // response is the actual csv file as string, needs parsing
-                                        mTextViewResult = (TextView) findViewById(R.id.tv_search_result);
-                                        mTextViewResult.setText(response);
-
+                                        mProgressBarLayout.setVisibility(View.GONE);
                                     }
                                 });
+
                             }
 
 
@@ -86,5 +98,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /**
+     * Replace R.id.fragment with StockGraphFragment
+     */
+    private void loadGraphFragment(){
+        StocksGraphFragment fragment = StocksGraphFragment.newInstance(mEditTextSearch.getText().toString());
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, fragment).commit();
+    }
+
+    @Override
+    public List<Date> getDates() {
+        return sp.getDateList();
+    }
+
+    @Override
+    public double[] getAdjClosed() {
+        return sp.getCloseAdjList();
     }
 }
