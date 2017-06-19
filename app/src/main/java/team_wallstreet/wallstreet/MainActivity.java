@@ -8,12 +8,15 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.net.Uri;
+import android.renderscript.Sampler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +27,11 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,17 +47,20 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import team_wallstreet.wallstreet.Fragments.StocksGraphFragment;
 import team_wallstreet.wallstreet.HttpReq.CookieHelper;
 import team_wallstreet.wallstreet.HttpReq.RequestListener;
 import team_wallstreet.wallstreet.HttpReq.RequestManager;
 import team_wallstreet.wallstreet.Utilities.StockParser;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements StocksGraphFragment.passStockDataCallBack {
 
     RequestManager requestManager;
     BroadcastReceiver receiver;
     Button search_button;
     EditText et_search;
+    private LineChart mLineChart;
+    private RelativeLayout mProgressBarLayout;
 
     private XYPlot plot;
     private StockParser sp;
@@ -77,28 +88,36 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(et_search.getText().toString().length() != 0) {
+                // Initialize the Request if the Input is valid
+                if(!et_search.getText().toString().isEmpty()) {
+
+                    // Show loading circle
+                    mProgressBarLayout = (RelativeLayout) findViewById(R.id.progress_bar);
+                    mProgressBarLayout.setVisibility(View.VISIBLE);
+
                     if (ch.getCookie() != null) {
                         requestManager = new RequestManager();
                         String url = "https://query1.finance.yahoo.com/v7/finance/download/"+et_search.getText().toString()+
-                                "?period1=1337478873&period2=" + timestamp + "&interval=1d&events=history&crumb=" + ch.getCrumb();
+                                "?period1=1465924420&period2=" + timestamp + "&interval=1d&events=history&crumb=" + ch.getCrumb();
                         requestManager.makeRequest(getApplicationContext(), url, new RequestListener() {
 
                             @Override
                             public void onRequestComplete(final String response) {
 
+                                // Parse the response
+                                sp = new StockParser(response, et_search.getText().toString());
+
+                                // Show the Graph
+                                loadGraphFragment();
+
+                                // Hide progress bar
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-
-                                        // response is the actual csv file as string, needs parsing
-                                        TextView tv = (TextView) findViewById(R.id.tv_search_result);
-                                        tv.setText(response);
+                                        mProgressBarLayout.setVisibility(View.GONE);
                                     }
                                 });
 
-                                sp = new StockParser(response, et_search.getText().toString());
-                                createGraph(sp.getDateList(), sp.getCloseAdjList());
                             }
                         }, ch.getCookie());
                     } else {
@@ -112,44 +131,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void createGraph(final ArrayList<Date> xVals, double[] yVals) {
-        // Initialize plot reference.
-        plot = (XYPlot) findViewById(R.id.plot);
+    private void loadGraphFragment(){
+        StocksGraphFragment fragment = StocksGraphFragment.newInstance(et_search.getText().toString());
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, fragment).commit();
+    }
 
-        List<Number> list = null;
+    @Override
+    public List<Date> getDates() {
+        return sp.getDateList();
+    }
 
-        // Convert double[] to List<java.lang.Double>;
-        for (int i = 0; i < yVals.length; i++) {
-            list.add(Double.valueOf(yVals[i]));
-        }
-
-        XYSeries series = new SimpleXYSeries(list,
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Stock trend");
-
-        LineAndPointFormatter seriesFormat = new LineAndPointFormatter(Color.RED, Color.GREEN, Color.BLUE, null);
-
-        // Use a dashed line effect.
-        seriesFormat.getLinePaint().setPathEffect(new DashPathEffect(new float[] {
-                PixelUtils.dpToPix(20),
-                PixelUtils.dpToPix(15)}, 0));
-
-        // Use line smoothing
-        seriesFormat.setInterpolationParams(
-                new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));
-
-        // Add series to XYPlot.
-        plot.addSeries(series, seriesFormat);
-
-        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
-            @Override
-            public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
-                int i = Math.round(((Number) obj).floatValue());
-                return toAppendTo.append(xVals.get(i));
-            }
-            @Override
-            public Object parseObject(String source, ParsePosition pos) {
-                return null;
-            }
-        });
+    @Override
+    public double[] getAdjClosed() {
+        return sp.getCloseAdjList();
     }
 }

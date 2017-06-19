@@ -1,72 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="team_wallstreet.wallstreet.MainActivity" >
+    tools:context="team_wallstreet.wallstreet.MainActivity"
+    android:orientation="vertical"
+    android:layout_margin="5dp">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="8dp"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-        <ScrollView
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Stock Code" />
+
+    <Button
+        android:id="@+id/b_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search Stock"/>
+
+    <!--<com.androidplot.xy.XYPlot-->
+        <!--style="@style/APDefacto.Dark"-->
+        <!--android:id="@+id/plot"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="300dp"-->
+        <!--app:title="Stock History"-->
+        <!--app:rangeTitle="Price"-->
+        <!--app:domainTitle="Date" />-->
+    <!-- app:linelables="left|bottom"
+    app:linelabelRotationBottom="-45" -->
+
+    <TextView
+        android:id="@+id/tv_search_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
+
+    <FrameLayout
+        android:id="@+id/fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/progress_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:visibility="gone"
+            >
+            <ProgressBar
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
 
-                <EditText
-                    android:id="@+id/et_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:hint="Enter Stock Code" />
+    </FrameLayout>
 
-                <Button
-                    android:id="@+id/b_search"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Search Stock"/>
 
-                <com.androidplot.xy.XYPlot
-                    style="@style/APDefacto.Dark"
-                    android:id="@+id/plot"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:title="Stock History"
-                    app:rangeTitle="Price"
-                    app:domainTitle="Date" />
-                <!-- app:linelables="left|bottom"
-                app:linelabelRotationBottom="-45" -->
-
-                <TextView
-                    android:id="@+id/tv_search_result"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:visibility="invisible" />
-
-            </LinearLayout>
-
-        </ScrollView>
-
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

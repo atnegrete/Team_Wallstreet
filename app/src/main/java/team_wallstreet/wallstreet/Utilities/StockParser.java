@@ -42,7 +42,7 @@ public class StockParser {
      */
     public StockParser(String stockCSV, String code) {
 
-        new StockParser();
+        this();
         StockCode = code;
 
         int count = 0;
@@ -53,7 +53,6 @@ public class StockParser {
 
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
-            Log.d("Data", "Input: " + input);
             parseStockString(input, count);
             count++;
         }
@@ -68,7 +67,7 @@ public class StockParser {
 
         // Change string to a Date and store in date.
         try {
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String date = scanner.next();
             DateList.add(df.parse(date));
         } catch (ParseException e) {
@@ -82,6 +81,11 @@ public class StockParser {
         CloseList[index] = scanner.nextDouble();
         CloseAdjList[index] = scanner.nextDouble();
         VolumeList[index] = scanner.nextInt();
+
+        String input = String.format("Parsed Input: %s, %s, %s, %s, %s, %s, %s", getDateList().get(index),
+                OpenList[index], HighList[index], LowList[index], CloseList[index], CloseAdjList[index], VolumeList[index]);
+
+        Log.d("Data", input);
 
         scanner.close();
     }
