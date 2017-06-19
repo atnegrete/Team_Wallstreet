@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements StocksGraphFragme
 
     void init(){
 
+        mProgressBarLayout = (RelativeLayout) findViewById(R.id.progress_bar);
+
         // get now's timestamp
         final String timestamp = "" + new Date().getTime();
 
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements StocksGraphFragme
         mButtonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Show progress bar
+                mProgressBarLayout.setVisibility(View.VISIBLE);
 
                 if(mEditTextSearch.getText().toString().length() != 0) {
                     if (mCookie != null) {
@@ -68,9 +72,7 @@ public class MainActivity extends AppCompatActivity implements StocksGraphFragme
 
                             @Override
                             public void onRequestComplete(final String response) {
-
-                                mProgressBarLayout.setVisibility(View.VISIBLE);
-
+                                
                                 // Parse the response
                                 sp = new StockParser(response, mEditTextSearch.getText().toString());
 

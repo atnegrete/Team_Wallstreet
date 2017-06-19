@@ -12,7 +12,6 @@ public class CookieHelper {
     private String crumb;
 
     public void getCookie(final Context context, final RequestManager requestManager, RequestListener requestListener){
-//        final RequestManager requestManager = new RequestManager();
         requestManager.makeRequest(context, "https://finance.yahoo.com/quote/AC?p=AC", requestListener, null);
     }
 
